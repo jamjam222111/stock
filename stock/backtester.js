@@ -145,7 +145,10 @@ const won = (value) => `₩${Math.round(value).toLocaleString('ko-KR')}`;
 const pct = (value) => `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
 
 function makePrices(ticker, years) {
-  const livePrices = liveMarketData[ticker];
+  const liveEntry = liveMarketData[ticker];
+  // 새 데이터 파일은 종목 메타데이터와 rows를 함께 보관하고,
+  // 예전 배열 형식도 계속 읽을 수 있게 호환한다.
+  const livePrices = Array.isArray(liveEntry) ? liveEntry : liveEntry?.rows;
   if (Array.isArray(livePrices) && livePrices.length > 20) {
     return livePrices.slice(-years * 252).map((item, index) => ({ ...item, day:index }));
   }
