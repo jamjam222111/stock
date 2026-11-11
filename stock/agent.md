@@ -193,3 +193,5 @@
 - 변경: `update-live-data.js`를 API 키 선택형 구조로 교체하고, Yahoo 공개 차트 OHLCV·조정종가 파싱, `updatedByTicker`, `refreshPolicy`, 부분 실패 메시지를 추가했다. `LIVE-DATA-SETUP.md`에 API 키 없는 실행법과 라이선스·일봉 한계를 기록했다.
 - 검증: Node 문법 검사 후 미국·한국 Yahoo 차트 응답을 확인하고, 실제 20개 종목의 최신 일봉 데이터를 갱신한다.
 - 남은 한계/다음 후보: Yahoo 공개 endpoint는 공식 상용 데이터 계약이 아니며 호출 제한·응답 변경 가능성이 있다. 공개 서비스 전환 시 Twelve Data 등 라이선스가 명확한 공급원으로 교체하고, 장중 시세가 필요하면 분봉 공급원을 별도로 연결해야 한다.
+
+- 추가 조치: API 키 없는 fallback이 Windows 작업 스케줄러에서도 작동하도록 `run-live-update.ps1`과 `setup-live-update-task.ps1`의 API 키 필수 검사를 제거하고 provider 로그를 남기도록 수정했다.

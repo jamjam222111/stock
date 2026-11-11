@@ -34,7 +34,7 @@ node update-live-data.js
 
 ## 매일 자동 갱신 예약
 
-API 키를 설정한 같은 PowerShell에서 한 번 실행합니다.
+PowerShell에서 한 번 실행합니다. API 키가 없어도 예약할 수 있습니다.
 
 ```powershell
 .\setup-live-update-task.ps1
