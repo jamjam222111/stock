@@ -65,6 +65,69 @@ function updateRebalancing(period) {
   });
 }
 
+// 랜딩페이지 안에서 자산 비중을 직접 편집하고 저장한다.
+const allocationCard = document.querySelector('.allocation-card');
+if (allocationCard) {
+  const allocationRows = [...allocationCard.querySelectorAll('.alloc-row')];
+  const allocationDefaults = [30, 40, 15, 15];
+  const allocationKey = 'quantly-allocation-v1';
+  const totalElement = allocationCard.querySelector('.alloc-top b');
+  const periodRow = allocationCard.querySelector('.slider-row');
+  const status = document.createElement('p');
+  status.className = 'allocation-status';
+  status.setAttribute('aria-live', 'polite');
+  const actions = document.createElement('div');
+  actions.className = 'allocation-actions';
+  actions.innerHTML = '<button type="button" class="allocation-save">전략 저장</button><button type="button" class="allocation-reset">초기화</button>';
+  periodRow?.after(status, actions);
+
+  const readSavedAllocation = () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(allocationKey));
+      return Array.isArray(saved) && saved.length === allocationRows.length ? saved : allocationDefaults;
+    } catch { return allocationDefaults; }
+  };
+  const inputs = allocationRows.map((row, index) => {
+    const value = Number(row.querySelector('strong')?.textContent.replace('%', '')) || allocationDefaults[index];
+    const input = document.createElement('input');
+    input.className = 'allocation-input';
+    input.type = 'number'; input.min = '0'; input.max = '100'; input.step = '1'; input.value = value;
+    input.setAttribute('aria-label', `${row.querySelector('.asset-name span')?.textContent.trim() || '자산'} 비중`);
+    row.querySelector('strong')?.replaceWith(input);
+    return input;
+  });
+
+  const renderAllocation = (values, message = '') => {
+    const cleanValues = values.map((value) => Math.max(0, Math.min(100, Number(value) || 0)));
+    const total = cleanValues.reduce((sum, value) => sum + value, 0);
+    inputs.forEach((input, index) => {
+      input.value = cleanValues[index];
+      const row = allocationRows[index];
+      const bar = row.querySelector('.bar i');
+      if (bar) bar.style.width = `${cleanValues[index]}%`;
+      row.classList.toggle('allocation-invalid', total !== 100);
+    });
+    if (totalElement) totalElement.textContent = `${total}%`;
+    allocationCard.classList.toggle('allocation-ready', total === 100);
+    allocationCard.classList.toggle('allocation-invalid-card', total !== 100);
+    status.textContent = message || (total === 100 ? '합계 100% · 저장 후 나만의 전략으로 사용할 수 있습니다.' : `현재 합계 ${total}% · 합계가 100%가 되도록 조정하세요.`);
+    const saveButton = actions.querySelector('.allocation-save');
+    if (saveButton) saveButton.disabled = total !== 100;
+  };
+  renderAllocation(readSavedAllocation());
+  inputs.forEach((input) => input.addEventListener('input', () => renderAllocation(inputs.map((item) => item.value))));
+  actions.querySelector('.allocation-save')?.addEventListener('click', () => {
+    const values = inputs.map((input) => Number(input.value) || 0);
+    if (values.reduce((sum, value) => sum + value, 0) !== 100) return;
+    localStorage.setItem(allocationKey, JSON.stringify(values));
+    renderAllocation(values, '저장했습니다 · 이 브라우저에서 다음 방문에도 유지됩니다.');
+  });
+  actions.querySelector('.allocation-reset')?.addEventListener('click', () => {
+    localStorage.removeItem(allocationKey);
+    renderAllocation(allocationDefaults, '기본 올웨더 배분으로 초기화했습니다.');
+  });
+}
+
 document.querySelectorAll('.side-item').forEach((button) => {
   button.addEventListener('click', () => {
     document.querySelectorAll('.side-item').forEach((item) => item.classList.remove('active'));
