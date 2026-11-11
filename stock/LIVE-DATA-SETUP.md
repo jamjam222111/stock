@@ -40,7 +40,7 @@ PowerShell에서 한 번 실행합니다. API 키가 없어도 예약할 수 있
 .\setup-live-update-task.ps1
 ```
 
-기본 예약 시간은 매일 오후 6시입니다. 실행 기록은 `data/logs/live-update.log`에 저장됩니다.
+예약 시간은 매일 오전 6시와 오후 6시입니다. updater가 각 종목의 마지막 갱신 시각을 확인하므로, 12시간 종목은 하루 두 번, 24시간 종목은 하루 한 번 실제로 갱신됩니다. 실행 기록은 `data/logs/live-update.log`에 저장됩니다.
 
 예약을 삭제하려면:
 
