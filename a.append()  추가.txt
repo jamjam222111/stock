@@ -1,0 +1,36 @@
+a.append()  추가
+a.pop()       삭제, 출력
+a.sort      a가 변형됨
+sorted(a)  a는 그대로
+a는 list
+
+dictionary.keys()
+
+dictionary['key'] = value
+
+del dictionary['key']
+
+len(dictionary) = length
+
+dictionary.values
+
+dictionary.items
+
+for x in dictionary :
+   print(x, dictionary[x])
+
+d.get('key', value)      d에   'key'가 있으면 원래 값 출력 없으면 괄호 안의 value 출력 단 d에 저장 돼지 않음
+d.setdefault('key', value)   위와 같지만 d에 저장됨
+
+range(n) = 0 ~ n-1
+
+>>>"x{1}xx{2}xxxxxxx{0}xxxxxx".format('zero', 'one', 'two')
+'xzeroxxxonexxtwoxxxxxxxzeroxxxxxx'
+
+>>> a = 10
+>>> b = 'five'
+>>> f'I ate {a} apples and {b} peaches'
+'I ate 10 apples and five peaches'
+
+{}안에 a*2 나 len(b)를 써도 됨
+
